@@ -1,66 +1,76 @@
-> [!NOTE]
-> This is a module template. Read the [instructions](./Instructions.md) for a step by step guide on how to create your module.
+# VIAM SENSOR-FILTER MODULE
+
+This is a [Viam module](https://docs.viam.com/extend/modular-resources/) that implements the generic service API in order to filter sensor data according to the user's requested conditions.
 
 
-# <INSERT NAME> modular resource
 
-This module implements...
-With this model, you can...
+## Getting started
 
-## Requirements
+To use this module, follow these instructions to [add a module from the Viam Registry](https://docs.viam.com/modular-resources/configure/#add-a-module-from-the-viam-registry) and select the `viam:generic:sensor-filter` model.
 
-_Add instructions here for any requirements._
+This module implements the `DoCommand()` method of the [generic service API](https://docs.viam.com/services/generic/#api).
 
-## Build and run
 
-To use this module, follow the instructions to [add a module from the Viam Registry](https://docs.viam.com/registry/configure/#add-a-modular-resource-from-the-viam-registry) and select the `<INSERT API NAMESPACE>:<INSERT API NAME>:<INSERT MODEL>` model from the [`<INSERT MODEL>` module](https://app.viam.com/module/<INSERT API NAMESPACE>/<INSERT MODEL>).
 
-## Configure your servo
 
-> [!NOTE]
-> Before configuring your servo you must [create a machine](https://docs.viam.com/manage/fleet/machines/#add-a-new-machine).
+## Configure your `sensor-filter` service
 
-Navigate to the **Config** tab of your machine's page in [the Viam app](https://app.viam.com/).
-Click on the **Components** subtab and click **Create component**.
-Select the `<INSERT API NAME>` type, then select the `<INSERT MODEL>` model.
-Click **Add module**, then enter a name for your servo and click **Create**.
+> [!NOTE]  
+> Before configuring your service, you must [create a robot](https://docs.viam.com/manage/fleet/robots/#add-a-new-robot).
 
-On the new component panel, copy and paste the following attribute template into your servo's **Attributes** box:
+Navigate to the **Config** tab of your robot’s page in [the Viam app](https://app.viam.com/). Click on the + button to the right of your robot part name. Then, click **Service**. Select the `generic` type, then select the `sensor-filter` model. Enter a name for your service and click **Create**.
 
-```json
-{
-  <INSERT SAMPLE ATTRIBUTES>
-}
-```
+### Example
+In the example below, a sensor was already configured on the robot. To configure your own sensor, navigate to the **Config** tab of your robot’s page in [the Viam app](https://app.viam.com/). Click on the + button to the right of your robot part name. Then, click **Component**. Find sensor in the drop down list, then select your type of sensor and [configure it appropriately](https://docs.viam.com/components/sensor/#configuration).
 
-> [!NOTE]
-> For more information, see [Configure a Machine](https://docs.viam.com/manage/configuration/).
 
-### Attributes
-
-The following attributes are available for `<INSERT API NAMESPACE>:<INSERT API NAME>:<INSERT MODEL>` servo's:
-
-| Name    | Type   | Inclusion    | Description |
-| ------- | ------ | ------------ | ----------- |
-| `todo1` | string | **Required** | TODO        |
-| `todo2` | string | Optional     | TODO        |
-
-### Example configuration
+#### Example configuration
 
 ```json
 {
-  <INSERT SAMPLE CONFIGURATION(S)>
+  "components": [
+    {
+      "name": "mySensor",
+      "namespace": "rdk",
+      "type": "sensor",
+      "model": "viam:ultrasonic:sensor",
+      "attributes": {
+        "board": "local",
+        "echo_interrupt_pin": "13",
+        "trigger_pin": "11"
+      }
+    }
+  ]
+  "services": [
+    {
+      "attributes": {
+        "value": 2,
+        "sensor_name": "mySensor",
+        "reading": "distance"
+        "conditions": [
+          {
+            "value": 2,
+            "operator": "gt"
+          }
+        ]
+      }
+      "name": "SF-module",
+      "type": "generic",
+      "namespace": "rdk",
+      "model": "viam:generic:sensor-filter"
+    }
+  ]
 }
 ```
 
-### Next steps
 
-_Add any additional information you want readers to know and direct them towards what to do next with this module._
-_For example:_
+### Description of Attributes
 
-- To test your...
-- To write code against your...
+The following attributes are available to configure your sensor-filter module:
 
-## Troubleshooting
 
-_Add troubleshooting notes here._# sensor-filter
+| Name                          | Type   | Inclusion       | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| ----------------------------- | ------ | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `sensor_name`                 | string | **Required** |Sensor name to be used as input.                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `reading`             | string | **Required** |Model to be used to extract faces before computing embedding. See [available extractors](#extractors-and-encoders-available).                                                                                                                                                                                                                                                                                                                                                                        |
+| `conditions`        | list    | Optional   | Each condition contains an operator and a value. Possible operators include: "gt", "gte", "lt", "lte", "eq", and "neq".  They correspond to >, >=, <, <=, =, and !=, respectively. Values can be anything. Without any conditions, the service will always return "true"                                                                                                                                                                                                                            
