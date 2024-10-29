@@ -5,4 +5,5 @@ lint:
 	golangci-lint run
 
 module.tar.gz:
-	go build -o module.tar.gz cmd/main.go
+	go build -o SFexe cmd/main.go
+	tar -czvf module.tar.gz SFexe meta.json

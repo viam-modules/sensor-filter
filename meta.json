@@ -1,0 +1,14 @@
+{
+  "$schema": "https://dl.viam.dev/module.schema.json",
+  "module_id": "viam:sensor-filter",
+  "visibility": "public",
+  "url": "github.com/viam-modules/sensor-filter",
+  "description": "An implementation of the Viam generic service API to filter sensor data ",
+  "models": [
+    {
+      "api": "viam:service:generic",
+      "model": "viam:generic:sensor-filter"
+    }
+  ],
+  "entrypoint": "SFexe"
+}
