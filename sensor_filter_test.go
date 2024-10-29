@@ -34,7 +34,7 @@ func TestValidate(t *testing.T) {
 	test.That(t, err.Error(), test.ShouldContainSubstring, "error validating")
 
 	// good vibes
-	cond := []*apputils.Eval{{"lt", 2}}
+	cond := []*apputils.Eval{{Operator: "lt", Value: 2}}
 	cfg = &Config{"mySensor", "temperature", cond}
 	_, err = cfg.Validate("")
 	test.That(t, err, test.ShouldBeNil)
@@ -49,7 +49,7 @@ func TestDo(t *testing.T) {
 		return out, nil
 	}
 
-	cond := []*apputils.Eval{{"lt", 2}}
+	cond := []*apputils.Eval{{Operator: "lt", Value: 2}}
 	cfg := &Config{"test", "distance", cond}
 	rcfg := resource.Config{Name: "mySF", ConvertedAttributes: cfg}
 	_, err := cfg.Validate("")
