@@ -124,6 +124,9 @@ func (s *sensorFilter) Reconfigure(ctx context.Context, deps resource.Dependenci
 
 	// Get everything else
 	s.condition = sfConfig.Conditions
+	if len(s.condition) < 1 {
+		s.logger.Warn("Condition(s) not found. Without conditions, the result will always be true.")
+	}
 	s.reading = sfConfig.Reading
 
 	return nil
@@ -135,20 +138,17 @@ func (s *sensorFilter) DoCommand(ctx context.Context, cmd map[string]interface{}
 	// Read from sensor
 	sensorOut, err := s.sensor.Readings(ctx, nil)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "could not get readings from sensor %v", s.sensorName)
 	}
 
 	// Evaluate sensor reading against each condition
 	// We want the logical AND of them all
-	var finalAns bool
-	for i, eval := range s.condition {
+	finalAns := true
+	for _, eval := range s.condition {
 		ans, err := eval.Operator.Evaluate(sensorOut[s.reading], eval.Value)
 		if err != nil {
 			s.logger.Error(err)
 			return nil, err
-		}
-		if i == 0 {
-			finalAns = ans
 		}
 		finalAns = finalAns && ans
 	}
