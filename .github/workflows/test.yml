@@ -19,6 +19,9 @@ jobs:
     - name: Install dependencies
       run: go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.61.0
 
+    - name: Tidy
+      run: go mod tidy
+
     - name: Run lint
       run: make lint
 
