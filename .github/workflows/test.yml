@@ -10,7 +10,7 @@ jobs:
   build:
     name: "Run unit tests"
     runs-on: ubuntu-latest
-    container: ghcr.io/viamrobotics/rdk-devenv:arm64
+    container: ghcr.io/viamrobotics/rdk-devenv:amd64
 
     steps:
     - uses: actions/checkout@v4
