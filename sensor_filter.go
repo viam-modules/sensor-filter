@@ -3,6 +3,7 @@ package sensor_filter
 
 import (
 	"context"
+
 	"github.com/pkg/errors"
 	"go.viam.com/rdk/components/sensor"
 	"go.viam.com/rdk/services/generic"
@@ -13,9 +14,6 @@ import (
 	"go.viam.com/rdk/resource"
 )
 
-// Here is where we define your new model's colon-delimited-triplet (viam-labs:go-module-templates-servo:customservo)
-// viam-labs = namespace, go-module-templates-servo = repo-name, customservo = model name.
-// TODO: Change model namespace, family (often the repo-name), and model. For more information see https://docs.viam.com/registry/create/#name-your-new-resource-model
 var (
 	Model          = resource.NewModel("viam", "generic", "sensor-filter")
 	validOperators = []apputils.EvalOperator{
@@ -149,6 +147,10 @@ func (s *sensorFilter) DoCommand(ctx context.Context, cmd map[string]interface{}
 		if err != nil {
 			s.logger.Error(err)
 			return nil, err
+		}
+		if !ans { // break early if one condition is false
+			finalAns = false
+			break
 		}
 		finalAns = finalAns && ans
 	}
