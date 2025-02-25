@@ -7,7 +7,9 @@
   "models": [
     {
       "api": "viam:service:generic",
-      "model": "viam:generic:sensor-filter"
+      "model": "viam:generic:sensor-filter",
+      "markdown_link": "README.md#example-attributes",
+      "short_description": "A generic service that returns true/false based on sensor input(s)"
     }
   ],
   "build": {

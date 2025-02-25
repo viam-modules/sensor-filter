@@ -44,7 +44,6 @@ In the example below, a sensor was already configured on the robot. To configure
   "services": [
     {
       "attributes": {
-        "value": 2,
         "sensor_name": "mySensor",
         "reading": "distance"
         "conditions": [
@@ -59,6 +58,27 @@ In the example below, a sensor was already configured on the robot. To configure
       "namespace": "rdk",
       "model": "viam:generic:sensor-filter"
     }
+  ]
+}
+```
+
+
+#### Example Attributes
+
+```json
+{
+  "sensor_name": "mySensor",
+  "reading": "distance",
+  "conditions": [
+    {
+      "value": 2,
+      "operator": "gt"
+    },
+    {
+      "value": 10,
+      "operator": "lt"
+    },
+
   ]
 }
 ```
