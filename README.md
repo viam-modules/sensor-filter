@@ -77,8 +77,7 @@ In the example below, a sensor was already configured on the robot. To configure
     {
       "value": 10,
       "operator": "lt"
-    },
-
+    }
   ]
 }
 ```
