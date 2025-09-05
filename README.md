@@ -1,30 +1,59 @@
-# VIAM SENSOR-FILTER MODULE
+# `sensor-filter` modular component
 
-This is a [Viam module](https://docs.viam.com/extend/modular-resources/) that implements the generic service API in order to filter sensor data according to the user's requested conditions.
+This module implements the [Viam generic service API](https://docs.viam.com/services/generic/#api) in a `viam:generic:sensor-filter` model.
+With this model, you can filter sensor data according to user-specified conditions, allowing you to return `true` or `false` based on other sensor readings.
 
-
-
-## Getting started
-
-To use this module, follow these instructions to [add a module from the Viam Registry](https://docs.viam.com/modular-resources/configure/#add-a-module-from-the-viam-registry) and select the `viam:generic:sensor-filter` model.
-
-This module implements the `DoCommand()` method of the [generic service API](https://docs.viam.com/services/generic/#api).
-
-
-
+Navigate to the **CONFIGURE** tab of your machine's page.
+Click the **+** button, select **Component or service**, then select the `generic / sensor-filter` model provided by the [`sensor-filter` module](https://app.viam.com/module/viam/sensor-filter).
+Click **Add module**, enter a name for your service, and click **Create**.
 
 ## Configure your `sensor-filter` service
 
-> [!NOTE]  
-> Before configuring your service, you must [create a robot](https://docs.viam.com/manage/fleet/robots/#add-a-new-robot).
+On the new component panel, copy and paste the following attribute template into your service's **Attributes** box:
 
-Navigate to the **Config** tab of your robot’s page in [the Viam app](https://app.viam.com/). Click on the + button to the right of your robot part name. Then, click **Service**. Select the `generic` type, then select the `sensor-filter` model. Enter a name for your service and click **Create**.
+```json
+{
+  "sensor_name": "<string>",
+  "reading": "<string>",
+  "conditions": [
+    {
+      "value": <any>,
+      "operator": "<string>"
+    }
+  ]
+}
+```
 
-### Example
-In the example below, a sensor was already configured on the robot. To configure your own sensor, navigate to the **Config** tab of your robot’s page in [the Viam app](https://app.viam.com/). Click on the + button to the right of your robot part name. Then, click **Component**. Find sensor in the drop down list, then select your type of sensor and [configure it appropriately](https://docs.viam.com/components/sensor/#configuration).
+### Attributes
 
+The following attributes are available for `viam:generic:sensor-filter` services:
 
-#### Example configuration
+| Name          | Type   | Inclusion | Description |
+| ------------- | ------ | --------- | ----------- |
+| `sensor_name` | string | Required  | Sensor name to be used as input |
+| `reading`     | string | Required  | The specific reading from the sensor to filter |
+| `conditions`  | list   | Optional  | Each condition contains an operator and a value. Possible operators include: "gt", "gte", "lt", "lte", "eq", and "neq". They correspond to >, >=, <, <=, =, and !=, respectively. Values can be anything. Without any conditions, the service will always return `true` |
+
+### Example Configuration
+
+```json
+{
+  "sensor_name": "mySensor",
+  "reading": "distance",
+  "conditions": [
+    {
+      "value": 2,
+      "operator": "gt"
+    },
+    {
+      "value": 10,
+      "operator": "lt"
+    }
+  ]
+}
+```
+
+Full configuration with example sensor:
 
 ```json
 {
@@ -61,35 +90,3 @@ In the example below, a sensor was already configured on the robot. To configure
   ]
 }
 ```
-
-
-#### Example Attributes
-
-```json
-{
-  "sensor_name": "mySensor",
-  "reading": "distance",
-  "conditions": [
-    {
-      "value": 2,
-      "operator": "gt"
-    },
-    {
-      "value": 10,
-      "operator": "lt"
-    }
-  ]
-}
-```
-
-
-### Description of Attributes
-
-The following attributes are available to configure your sensor-filter module:
-
-
-| Name                          | Type   | Inclusion       | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| ----------------------------- | ------ | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sensor_name`                 | string | **Required** |Sensor name to be used as input.                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `reading`             | string | **Required** |Model to be used to extract faces before computing embedding. See [available extractors](#extractors-and-encoders-available).                                                                                                                                                                                                                                                                                                                                                                        |
-| `conditions`        | list    | Optional   | Each condition contains an operator and a value. Possible operators include: "gt", "gte", "lt", "lte", "eq", and "neq".  They correspond to >, >=, <, <=, =, and !=, respectively. Values can be anything. Without any conditions, the service will always return "true"                                                                                                                                                                                                                            
