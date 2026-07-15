@@ -37,23 +37,23 @@ type Config struct {
 }
 
 // Validate validates the config and returns implicit dependencies.
-func (cfg *Config) Validate(path string) ([]string, error) {
+func (cfg *Config) Validate(path string) ([]string, []string, error) {
 
 	if cfg.SensorName == "" {
-		return nil, utils.NewConfigValidationFieldRequiredError(path, "sensor_name")
+		return nil, nil, utils.NewConfigValidationFieldRequiredError(path, "sensor_name")
 	}
 
 	if cfg.Reading == "" {
-		return nil, utils.NewConfigValidationFieldRequiredError(path, "reading")
+		return nil, nil, utils.NewConfigValidationFieldRequiredError(path, "reading")
 	}
 
 	for _, eval := range cfg.Conditions {
 		if !eval.Operator.IsValidOperator(validOperators...) {
-			return nil, errors.Errorf("cannot use %s operator", eval.Operator.ToReadableString())
+			return nil, nil, errors.Errorf("cannot use %s operator", eval.Operator.ToReadableString())
 		}
 	}
 
-	return []string{cfg.SensorName}, nil
+	return []string{cfg.SensorName}, nil, nil
 }
 
 // Constructor that creates and returns a new sensor filter service.
@@ -160,6 +160,11 @@ func (s *sensorFilter) DoCommand(ctx context.Context, cmd map[string]interface{}
 	out["result"] = finalAns
 	return out, err
 
+}
+
+// Status returns the current status of the resource.
+func (s *sensorFilter) Status(ctx context.Context) (map[string]interface{}, error) {
+	return map[string]interface{}{}, nil
 }
 
 // Close closes the underlying generic.

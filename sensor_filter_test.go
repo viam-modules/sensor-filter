@@ -18,25 +18,25 @@ import (
 func TestValidate(t *testing.T) {
 	// empty
 	cfg := &Config{"", "", nil}
-	_, err := cfg.Validate("")
+	_, _, err := cfg.Validate("")
 	test.That(t, err, test.ShouldNotBeNil)
 
 	// no SensorName
 	cfg = &Config{"", "temperature", nil}
-	_, err = cfg.Validate("")
+	_, _, err = cfg.Validate("")
 	test.That(t, err, test.ShouldNotBeNil)
 	test.That(t, err.Error(), test.ShouldContainSubstring, "error validating")
 
 	// no reading
 	cfg = &Config{"mySensor", "", nil}
-	_, err = cfg.Validate("")
+	_, _, err = cfg.Validate("")
 	test.That(t, err, test.ShouldNotBeNil)
 	test.That(t, err.Error(), test.ShouldContainSubstring, "error validating")
 
 	// good vibes
 	cond := []*apputils.Eval{{Operator: "lt", Value: 2}}
 	cfg = &Config{"mySensor", "temperature", cond}
-	_, err = cfg.Validate("")
+	_, _, err = cfg.Validate("")
 	test.That(t, err, test.ShouldBeNil)
 
 }
@@ -52,7 +52,7 @@ func TestDo(t *testing.T) {
 	cond := []*apputils.Eval{{Operator: "lt", Value: 2}}
 	cfg := &Config{"test", "distance", cond}
 	rcfg := resource.Config{Name: "mySF", ConvertedAttributes: cfg}
-	_, err := cfg.Validate("")
+	_, _, err := cfg.Validate("")
 	test.That(t, err, test.ShouldBeNil)
 
 	ctx := context.Background()
@@ -61,9 +61,10 @@ func TestDo(t *testing.T) {
 		sensor.Named("test"): sens,
 	}
 
-	sf, err := newSensorFilter(ctx, resourceMap, rcfg, logger)
+	sfRes, err := newSensorFilter(ctx, resourceMap, rcfg, logger)
 	test.That(t, err, test.ShouldBeNil)
 
+	sf := sfRes.(*sensorFilter)
 	err = sf.Reconfigure(ctx, resourceMap, rcfg)
 	test.That(t, err, test.ShouldBeNil)
 
