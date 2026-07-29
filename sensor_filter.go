@@ -115,7 +115,7 @@ func (s *sensorFilter) Reconfigure(ctx context.Context, deps resource.Dependenci
 
 	// Make sure we can get the sensor
 	s.sensorName = sfConfig.SensorName
-	s.sensor, err = sensor.FromDependencies(deps, sfConfig.SensorName)
+	s.sensor, err = sensor.FromProvider(deps, sfConfig.SensorName)
 	if err != nil {
 		return errors.Wrapf(err, "could not find sensor called %v ", s.sensorName)
 	}
